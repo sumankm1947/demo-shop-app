@@ -19,7 +19,7 @@
                                     <img src="<%= product.imageUrl %>" alt="<%= product.title %>">
                                 </div>
                                 <div class="card__content">
-                                    <h2 class="product__price">$
+                                    <h2 class="product__price">₹
                                         <%= product.price %>
                                     </h2>
                                     <p class="product__description">
@@ -27,12 +27,15 @@
                                     </p>
                                 </div>
                                 <div class="card__actions">
-                                    <a class="btn" href="products/<%= product.id %> ">Details</a>
-                                    <%- include('../includes/add-to-cart', {product: product}) %> 
+                                    <a class="btn" href="products/<%= product._id %> ">Details</a>
+                                    <% if (isAuthenticated) { %> 
+                                        <%- include('../includes/add-to-cart', {product: product}) %> 
+                                    <% } %> 
                                 </div>
                             </article>
                             <% } %>
                     </div>
+                    <%- include('../includes/pagination', { lastPage: lastPage, hasPreviousPage: hasPreviousPage, previousPage: previousPage, currentPage: currentPage, hasNextPage: hasNextPage, nextPage: nextPage, lastPage: lastPage }) %> 
                     <% } else { %>
                         <h1>No Products Found!</h1>
                         <% } %>
