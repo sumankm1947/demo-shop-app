@@ -18,6 +18,7 @@ const User = require("./models/user");
 
 const MONGODB_URI =
   "mongodb+srv://shop-app:shopapp001@cluster0.frvsh.mongodb.net/shop-app?retryWrites=true&w=majority";
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 const store = new MongoDBStore({
@@ -119,7 +120,7 @@ mongoose
     console.log("MongoDB connected");
   })
   .then((result) => {
-    app.listen(3000);
+    app.listen(PORT);
     console.log(`App is running on http://localhost:3000`);
   })
   .catch((err) => console.log(err));
