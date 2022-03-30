@@ -177,6 +177,8 @@ exports.getCheckout = (req, res, next) => {
         total += p.quantity * p.productId.price;
       });
 
+      total = total.toFixed(2) * 1;
+      console.log(typeof(total));
       return stripe.checkout.sessions
         .create({
           payment_method_types: ["card"],
