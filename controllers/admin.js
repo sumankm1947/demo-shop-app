@@ -1,3 +1,5 @@
+const sharp = require("sharp");
+const fs = require("fs");
 const { validationResult } = require("express-validator");
 
 const Product = require("../models/product");
@@ -20,8 +22,6 @@ exports.postAddProduct = (req, res, next) => {
   const image = req.file;
   const price = req.body.price;
   const description = req.body.description;
-
-  // console.log(image);
 
   if (!image) {
     return res.status(422).render("admin/edit-product", {
@@ -55,18 +55,24 @@ exports.postAddProduct = (req, res, next) => {
       validationErrors: errors.array(),
     });
   }
+  const imageName = new Date().getTime() + "-" + image.originalname;
 
   const product = new Product({
     title: title,
     price: price,
     description: description,
-    imageUrl: "\\" + image.path,
+    imageUrl: "\\images\\" + imageName,
     userId: req.user,
   });
   product
     .save()
     .then((result) => {
       console.log("Product Created");
+      return sharp(req.file.buffer)
+        .resize({ width: 300, height: 300 })
+        .toFile(`./images/${imageName}`);
+    })
+    .then((result) => {
       res.redirect("/admin/products");
     })
     .catch((err) => {
@@ -146,6 +152,7 @@ exports.postEditProduct = (req, res, next) => {
       validationErrors: errors.array(),
     });
   }
+  const imageName = new Date().getTime() + "-" + updatedImage.originalname;
 
   Product.findById(productId)
     .then((product) => {
@@ -157,12 +164,17 @@ exports.postEditProduct = (req, res, next) => {
       product.description = updatedDescription;
       if (updatedImage) {
         fileHelper.deleteFile(product.imageUrl.slice(1)); // other-wise it will look in root directory => E://images/...
-        product.imageUrl = "\\" + updatedImage.path;
+        product.imageUrl = "\\images\\" + imageName;
       }
-      return product.save().then(() => {
-        console.log("PRODUCT UPDATED");
-        res.redirect("/admin/products");
-      });
+      return product.save();
+    })
+    .then(() => {
+      return sharp(req.file.buffer)
+        .resize({ width: 300, height: 300 })
+        .toFile(`./images/${imageName}`);
+    })
+    .then((result) => {
+      res.redirect("/admin/products");
     })
     .catch((err) => {
       const error = new Error(err);
@@ -187,6 +199,8 @@ exports.deleteDeleteProduct = (req, res, next) => {
       res.status(200).json({ message: "Product Deletion Successful !" });
     })
     .catch((err) => {
-      res.status(500).json({ message: "Product Deletion Failed !", error: err });
+      res
+        .status(500)
+        .json({ message: "Product Deletion Failed !", error: err });
     });
 };
