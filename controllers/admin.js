@@ -196,7 +196,8 @@ exports.deleteDeleteProduct = (req, res, next) => {
     })
     .then((result) => {
       console.log("DESTROYED");
-      res.status(200).json({ message: "Product Deletion Successful !" });
+      // res.status(200).json({ message: "Product Deletion Successful !" });
+      res.redirect("/admin/products");
     })
     .catch((err) => {
       res
