@@ -183,8 +183,8 @@ exports.postEditProduct = (req, res, next) => {
     });
 };
 
-exports.deleteDeleteProduct = (req, res, next) => {
-  const productId = req.params.productId;
+exports.postDeleteProduct = (req, res, next) => {
+  const productId = req.body.productId;
 
   Product.findById(productId)
     .then((product) => {
