@@ -14,8 +14,8 @@ const deleteProduct = (btn) => {
     })
     .then(body => {
         // console.log(body);
-        productElement.parentNode.removeChild(productElement); // For all browsers
-        // productElement.remove() // For modern browsers
+        // productElement.parentNode.removeChild(productElement); // For all browsers
+        productElement.remove()
     })
     .catch((err) => console.log(err));
 };
