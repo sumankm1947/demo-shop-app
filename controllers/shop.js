@@ -319,7 +319,7 @@ exports.getInvoice = (req, res, next) => {
             lineGap: 10,
           }
         );
-      doc.fontSize(15).text(`Total Amount : $${totalAmount}`, {
+      doc.fontSize(15).text(`Total Amount : $${totalAmount.toFixed(2)}`, {
         align: "center",
       });
 
