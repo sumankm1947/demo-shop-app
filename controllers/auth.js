@@ -8,8 +8,7 @@ const User = require("../models/user");
 const transporter = nodemailer.createTransport(
   sendgridTransport({
     auth: {
-      api_key:
-        "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",
+      api_key: process.env.SENDGRID_API_KEY,
     },
   })
 );
@@ -97,7 +96,7 @@ exports.getLogin = (req, res, next) => {
     oldInput: {
       email: "",
       password: "",
-    }
+    },
   });
 };
 
@@ -114,7 +113,7 @@ exports.postLogin = (req, res, next) => {
       oldInput: {
         email: email,
         password: password,
-      }
+      },
     });
   }
 
@@ -129,8 +128,8 @@ exports.postLogin = (req, res, next) => {
           oldInput: {
             email: email,
             password: password,
-          }
-        })
+          },
+        });
       }
       bcrypt
         .compare(password, user.password)
@@ -145,8 +144,8 @@ exports.postLogin = (req, res, next) => {
               oldInput: {
                 email: email,
                 password: password,
-              }
-            })
+              },
+            });
           }
           req.session.user = user;
           req.session.isLoggedIn = true;
@@ -217,7 +216,7 @@ exports.postReset = (req, res, next) => {
               html: `
               <h2>You requested for reset password</h2>
               <p>Your reset Password Link</p>
-              <p>Click <a href="http://localhost:3000/reset/${token}">Here</a></p>
+              <p>Click <a href="${req.protocol}://${req.get("host")}/reset/${token}">Here</a></p>
               `,
             });
           })

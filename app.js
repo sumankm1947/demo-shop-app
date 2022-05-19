@@ -1,5 +1,7 @@
 const path = require("path");
 
+require("dotenv").config();
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const session = require("express-session");
@@ -16,25 +18,13 @@ const authRoutes = require("./routes/auth");
 const mongoose = require("mongoose");
 const User = require("./models/user");
 
-const MONGODB_URI =
-  "mongodb+srv://shop-app:shopapp001@cluster0.frvsh.mongodb.net/shop-app?retryWrites=true&w=majority";
-const PORT = process.env.PORT || 5000;
-
 const app = express();
 const store = new MongoDBStore({
-  uri: MONGODB_URI,
+  uri: process.env.MONGODB_URI,
   collection: "sessions",
 });
 const csrfProtection = csrf();
 
-// const fileStorage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, "images");
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, new Date().getTime() + "-" + file.originalname);
-//   },
-// });
 const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
@@ -57,13 +47,11 @@ app.set("views", "views");
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(
-  multer({ storage: storage, fileFilter: fileFilter }).single("image")
-);
+app.use(multer({ storage: storage, fileFilter: fileFilter }).single("image"));
 
 app.use(
   session({
-    secret: "hellomynameissuman",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: store,
@@ -116,12 +104,12 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(MONGODB_URI)
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("MongoDB connected");
   })
   .then((result) => {
-    app.listen(PORT);
+    app.listen(process.env.PORT || 5000);
     // console.log(`App is running on http://localhost:3000`);
   })
   .catch((err) => console.log(err));
