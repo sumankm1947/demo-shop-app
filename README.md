@@ -14,4 +14,4 @@ This is a shop app which contains almost  all functionality
 
 ## Demo
 
-[Click Here](https://demo-shop-app-007.herokuapp.com/)
+[Click Here](https://demo-shop-app.onrender.com/)
